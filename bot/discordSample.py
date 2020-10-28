@@ -1,50 +1,26 @@
 import discord
-import os
-# from MrDestructoid import keep_alive
 from discord.ext import commands
+import os
 
-
-client = discord.Client()
-env = os.environ
-bot = commands.Bot(command_prefix="!")
-TOKEN=os.getenv("DISCORD_TOKEN")
-GUILD=os.getenv('DISCORD_GUILD')
-
-@bot.event
-async def on_ready():
-    for guild in bot.guilds:
-        print(guild)
-    print("bot btw haHAA")
-    # print(bot.name,guild.id)
-    print(bot.user)
+client = commands.Bot(command_prefix=".")
+token = os.getenv("DISCORD_TOKEN")
 
 @client.event
-async def on_message(message):
-    if message.author != client.user:
-        if message.content == 'ping':
-            await message.channel.send('ping')
+async def on_ready() :
+    await client.change_presence(status = discord.Status.idle, activity = discord.Game("Listening to .help"))
+    print("I am online")
 
-        elif message.content == 'forsenLookingAtYou':
-            await message.channel.send('forsenOkay')
+@client.command()
+async def ping(ctx) :
+    await ctx.send(f"🏓 Pong with {str(round(client.latency, 2))}")
 
-@client.event
-async def on_member_join(member):
-    await member.create_dm()
-    await member.dm_channel.send(
-        f'Hi {member.name}, welcome to my Discord server!'
-    )
+@client.command(name="whoami")
+async def whoami(ctx) :
+    await ctx.send(f"You are {ctx.message.author.name}")
 
-@client.event
-async def on_error(event, *args, **kwargs):
-    with open('err.log', 'a') as f:
-        if event == 'on_message':
-            f.write(f'Unhandled message: {args[0]}\n')
+@client.command()
+async def clear(ctx, amount=3) :
+    await ctx.channel.purge(limit=amount)
 
-@bot.command(help='no,i don\'t think so')
-async def ping(ctx):
-    await ctx.send('forsenSmug')
 
-# keep_alive()
-# client.run(TOKEN)
-bot.run(TOKEN)
-
+client.run(token)
