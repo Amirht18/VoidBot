@@ -1,12 +1,11 @@
 import discord
 import os
-from dotenv import load_dotenv
 # from MrDestructoid import keep_alive
 from discord.ext import commands
 
-load_dotenv()
+
 client = discord.Client()
-# env = os.environ
+env = os.environ
 bot = commands.Bot(command_prefix="!")
 TOKEN=os.getenv("DISCORD_TOKEN")
 GUILD=os.getenv('DISCORD_GUILD')
